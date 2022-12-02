@@ -4,6 +4,7 @@ import { Form, Input, Button, Select, DatePicker, Col } from "antd";
 import {updatePatient} from './patientActions'
 import moment from "moment";
 
+// this function connects the component to the Redux store's dispatch function, which will be used to update the patient info in the sotre
 function mapDispatchToProps(dispatch) {
   return {
       updatePatient: (patientId, updatedPatient) => dispatch(updatePatient(patientId, updatedPatient))
