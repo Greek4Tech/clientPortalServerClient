@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios'
 import { connect } from "react-redux";
 import {
   Form,
@@ -54,6 +55,24 @@ const CreatePatient = props => {
     valuesToPass.symptoms = fields;
     // This line sets the medicines field of the valuesToPass object to the current value of the meds state variable.
     valuesToPass.medicines = meds;
+
+    // HTTP request to the backend from the frontend using Axios library. This will send a POST request to the /api/create-patient endpoint on the backend with the valuesToPass object as the request body.
+    axios
+      .post("/api/addpatient", valuesToPass)
+      .then(response => {
+        console.log(response);
+        if (response.data.success) {
+          props.add_patient(valuesToPass);
+          props.history.push("/patientlist");
+        } else {
+          console.error("Failed to create patient");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+
     // This line calls the `add_patient` function from the `props` object with the `valuesToPass` object as an argument. The `add_patient` function is used to dispatch an action to add a patient to the application's state. The `valuesToPass` object contains the value of the form fields, including the patient's name, email, gender, symptoms and medications. The `add_patient` function is passed to `CreatePatient` component as a prop, and it is defined in the parent component, in App.js
     props.add_patient(valuesToPass);
     // This line uses `push` method of the `history` object from the `props` object to navigate to the `/patientlist` route. The `history` object is part of the `react-router-dom` library and it is used to manage the browser's history and navigates to the specified route. In this case, the `/patientlist` route is being navigated to after the patient has been added to the application's state. This route displays a list of patients in the application. 
@@ -138,7 +157,7 @@ const CreatePatient = props => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="email" label="Email" rules={[{ type: "email" }]}>
+        <Form.Item name="email" label="Email" rules={[{ type: "email", required: true }]}>
           <Input />
         </Form.Item>
         <Form.Item

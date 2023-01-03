@@ -8,7 +8,9 @@ const MongoStore = require('connect-mongo');
 const methodOverride = require("method-override");
 const flash = require("express-flash");
 const logger = require("morgan");
+const path = require('path');
 const connectDB = require("./config/database");
+PORT = 5000
 
 // test
 
@@ -16,17 +18,19 @@ const connectDB = require("./config/database");
 require("dotenv").config({ path: "./config/.env" });
 
 //Connect To Database
-// connectDB();
+connectDB();
 
 // paths for our routes
-const mainRoutes = require('./routes/main');
-const friendsRoutes = require('./routes/friends')
-const googleRoutes = require('./routes/google');
+// const mainRoutes = require('./routes/main');
+// const friendsRoutes = require('./routes/friends')
+// const googleRoutes = require('./routes/google');
+const Patient = require('./models/Patient')
 
 
 //Body Parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.use(cors());
 
@@ -42,48 +46,37 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const patientSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  age: Number,
-  gender: String,
-  symptoms: [String],
-  medications: [String]
-});
-
-const Patient = mongoose.model("Patient", patientSchema);
-
-
-// app.get("/api/patients", (req, res)=> {
-//     res.json({
-//         patients: [
-//           {
-//             id: "1",
-//             name: "Dwight Schrute",
-//             domain: "patient",
-//             email: "Dwight@office.com",
-//             age: 20,
-//             gender: "male",
-//             date_of_birth: "2020/03/20",
-//             date_of_last_visit: "2020/03/20",
-//             symptoms: [{ value: "Cough" }, { value: "Headache" }],
-//             medicines: [{ meds: "Diphenhydramine" }]
-//           },
-//           {
-//             id: "2",
-//             name: "James Halpert",
-//             domain: "patient",
-//             email: "James@office.com",
-//             age: 20,
-//             gender: "male",
-//             date_of_birth: "2020/03/20",
-//             date_of_last_visit: "2020/03/20",
-//             symptoms: [{ value: "Fever" }, { value: "Cold" }],
-//             medicines: [{ meds: "Crocin" }, { meds: "Vicks" }]
-//           }
-//         ]
-//       })
-// })
+// Connect to MongoDB
+app.get("/api/patients", (req, res)=> {
+    res.json({
+        patients: [
+          {
+            id: "1",
+            name: "Dwight Schrute",
+            domain: "patient",
+            email: "Dwight@office.com",
+            age: 20,
+            gender: "male",
+            date_of_birth: "2020/03/20",
+            date_of_last_visit: "2020/03/20",
+            symptoms: [{ value: "Cough" }, { value: "Headache" }],
+            medicines: [{ meds: "Diphenhydramine" }]
+          },
+          {
+            id: "2",
+            name: "James Halpert",
+            domain: "patient",
+            email: "James@office.com",
+            age: 20,
+            gender: "male",
+            date_of_birth: "2020/03/20",
+            date_of_last_visit: "2020/03/20",
+            symptoms: [{ value: "Fever" }, { value: "Cold" }],
+            medicines: [{ meds: "Crocin" }, { meds: "Vicks" }]
+          }
+        ]
+      })
+})
 
 // A mock database of users
 const users = [
@@ -107,9 +100,38 @@ const users = [
   }
 ];
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.post('/api/addpatient', (req, res) => {
+  // Get the patient data from the request body
+  const patient = req.body;
+
+  // Create a new patient document using the Patient model
+  const newPatient = new Patient(patient);
+
+  // Save the patient document to the database
+  newPatient.save((err, result) => {
+    if (err) {
+      console.error(err);
+      res.send({ success: false });
+    } else {
+      // Patient saved successfully
+      res.send({ success: true });
+    }
+  });
 });
+
+
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  const user = users.find(user => user.email === email && user.password === password);
+  if (user) {
+    // with the response(res.send) to the front end, we must include user: { id: user.id, domain: user.domain } because the front end needs to determine which page to redirect the user to after they log in
+    res.send({ success: true, user: { id: user.id, domain: user.domain } });
+  } else {
+    res.send({ success: false });
+  }
+});
+
 
 // // The login endpoint
 // router.post('/login', (req, res) => {
@@ -125,13 +147,13 @@ app.get("/", (req, res) => {
 // module.exports = router;
 
 //home page => mainroute; find in routes folder
-app.use('/', mainRoutes);
-app.use('/friends', friendsRoutes);
-app.use('/auth', googleRoutes)
+// app.use('/', mainRoutes);
+// app.use('/friends', friendsRoutes);
+// app.use('/auth', googleRoutes)
 
 //Server Running
 app.listen(process.env.PORT, () => {
-  console.log("Server is running, you better catch it!");
+  console.log("Server is running, you better catch it!", PORT);
 });
 
 

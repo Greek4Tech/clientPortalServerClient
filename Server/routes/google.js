@@ -10,7 +10,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile']}))
 //@Route GET /auth/google/callback
 router.get('/google/callback', 
 passport.authenticate('google', {failureRedirect: '/', failureFlash: true}), (req,res) => {
-    res.redirect('/friends')
+    res.redirect('/Patients')
 }
 )
 
