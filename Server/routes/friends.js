@@ -2,22 +2,22 @@
 const { getRounds } = require('bcrypt');
 const express = require('express');
 const router = express.Router();
-const friendController = require('../controllers/friend');
+const PatientController = require('../controllers/Patient');
 
 const { ensureAuth } = require('../middleware/auth');
 
 // protect all route to stop artificial requests
 router.use('/', ensureAuth);
-router.get('/', friendController.getFriends);
+router.get('/', PatientController.getPatients);
 
 // required to serve static files
 router.use('/edit', express.static('public'));
-router.get('/edit/:friendId', friendController.getFriendPage);
+router.get('/edit/:PatientId', PatientController.getPatientPage);
 
-router.put('/edit', friendController.editFriend);
+router.put('/edit', PatientController.editPatient);
 
-router.post('/createFriend', friendController.createFriend);
+router.post('/createPatient', PatientController.createPatient);
 
-router.delete('/deleteFriend', friendController.deleteFriend);
+router.delete('/deletePatient', PatientController.deletePatient);
 
 module.exports = router;

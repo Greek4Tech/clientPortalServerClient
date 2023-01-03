@@ -1,55 +1,55 @@
-const Friend = require('../models/Friend');
+const Patient = require('../models/Patient');
 const validator = require('validator')
 
 module.exports = {
-  getFriends: async (req, res) => {
+  getPatients: async (req, res) => {
     // console.log(req.user)
     try {
-      const friends = await Friend.find({ userId: req.user.id });
-      console.log(friends, { userId: req.user.id })
-      const friendsLeft = await Friend.countDocuments({
+      const Patients = await Patient.find({ userId: req.user.id });
+      console.log(Patients, { userId: req.user.id })
+      const PatientsLeft = await Patient.countDocuments({
         userId: req.user.id,
         completed: false,
       });
-      // console.log(friends)
-      res.render('friends.ejs', {
-        friends: friends,
-        // left: friendsLeft,
+      // console.log(Patients)
+      res.render('Patients.ejs', {
+        Patients: Patients,
+        // left: PatientsLeft,
         user: req.user,
       });
     } catch (err) {
       console.log(err);
     }
   },
-  getFriendPage: async (req, res) => {
-    const friendId = req.params.friendId;
+  getPatientPage: async (req, res) => {
+    const PatientId = req.params.PatientId;
     try {
-      const friend = await Friend.find({ _id: friendId });
-      res.render('friend.ejs', { friend: friend[0] });
+      const Patient = await Patient.find({ _id: PatientId });
+      res.render('Patient.ejs', { Patient: Patient[0] });
     } catch (err) {
       console.log(err);
     }
   },
-  createFriend: async (req, res) => {
+  createPatient: async (req, res) => {
     try {
-      await Friend.create({
-        name: req.body.friendName,
+      await Patient.create({
+        name: req.body.PatientName,
         phone: req.body.phoneNumber,
         completed: false,
         userId: req.user.id,
       });
-      console.log('Friend has been added');
-      res.redirect('/friends');
+      console.log('Patient has been added');
+      res.redirect('/Patients');
     } catch (err) {
       console.log(err);
     }
   },
-  editFriend: async (req, res) => {
+  editPatient: async (req, res) => {
     try {
-      await Friend.findOneAndUpdate(
-        { _id: req.body.friendIdFromJSFile },
+      await Patient.findOneAndUpdate(
+        { _id: req.body.PatientIdFromJSFile },
         {
-          name: req.body.friendName,
+          name: req.body.PatientName,
           phone: req.body.phoneNumber,
         }
       );
@@ -61,8 +61,8 @@ module.exports = {
   },
   markComplete: async (req, res) => {
     try {
-      await Friend.findOneAndUpdate(
-        { _id: req.body.friendIdFromJSFile },
+      await Patient.findOneAndUpdate(
+        { _id: req.body.PatientIdFromJSFile },
         {
           completed: true,
         }
@@ -75,8 +75,8 @@ module.exports = {
   },
   markIncomplete: async (req, res) => {
     try {
-      await Friend.findOneAndUpdate(
-        { _id: req.body.friendIdFromJSFile },
+      await Patient.findOneAndUpdate(
+        { _id: req.body.PatientIdFromJSFile },
         {
           completed: false,
         }
@@ -87,13 +87,13 @@ module.exports = {
       console.log(err);
     }
   },
-  deleteFriend: async (req, res) => {
-    console.log('Deleting friend');
+  deletePatient: async (req, res) => {
+    console.log('Deleting Patient');
     console.log(req.body);
-    console.log(req.body.friendIdFromJSFile);
+    console.log(req.body.PatientIdFromJSFile);
     try {
-      await Friend.findOneAndDelete({ _id: req.body.friendIdFromJSFile });
-      console.log('Deleted Friend');
+      await Patient.findOneAndDelete({ _id: req.body.PatientIdFromJSFile });
+      console.log('Deleted Patient');
       res.json('Deleted It');
     } catch (err) {
       console.log(err);
