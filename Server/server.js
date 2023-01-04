@@ -46,6 +46,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 // Connect to MongoDB
 app.get("/api/patients", (req, res)=> {
     res.json({
@@ -105,7 +106,17 @@ app.post('/api/addpatient', (req, res) => {
   const patient = req.body;
 
   // Create a new patient document using the Patient model
-  const newPatient = new Patient(patient);
+  const newPatient = new Patient({
+    name: req.body.name,
+    email: req.body.email,
+    age: req.body.age,
+    gender: req.body.gender,
+    symptoms: req.body.symptoms,
+    medicines: req.body.meds,
+    dateOfBirth: req.body.dateOfBirth,
+    lastVisited: req.body.lastVisited 
+  });
+  console.log(newPatient)
 
   // Save the patient document to the database
   newPatient.save((err, result) => {
