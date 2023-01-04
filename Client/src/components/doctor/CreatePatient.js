@@ -92,7 +92,7 @@ const CreatePatient = props => {
     setFields(values);
   }
 
-  // The `handleAdd` function is called when the user clicks the "Add" button next to the symptoms input fields. It creates a copy of the `fields` array and adds a new object with a `value` peroperty set to `null` to the end of the array. It then updates the `fields` state value with the modified array. 
+  // The `handleAdd` function is called when the user clicks the "Add" button next to the symptoms input fields. It creates a copy of the `fields` array and adds a new object with a `value` property set to `null` to the end of the array. It then updates the `fields` state value with the modified array. 
   function handleAdd() {
     const values = [...fields];
     values.push({ value: null });
