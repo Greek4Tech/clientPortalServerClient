@@ -35,7 +35,7 @@ const patientSchema = new mongoose.Schema({
     required: true,
     // enum: ['male', 'female', 'other']
   },
-  medications: {
+  medicines: {
     type: [String]
   }
 });

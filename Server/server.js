@@ -10,12 +10,14 @@ const flash = require("express-flash");
 const logger = require("morgan");
 const path = require('path');
 const connectDB = require("./config/database");
-PORT = 5000
+
+// PORT = 5000
 
 // test
 
 //Use .env file in config folder
-require("dotenv").config({ path: "./config/.env" });
+require('dotenv').config({ path: './config/.env' });
+console.log(process.env)
 
 //Connect To Database
 connectDB();
@@ -48,36 +50,27 @@ app.use(passport.session());
 
 
 // Connect to MongoDB
-app.get("/api/patients", (req, res)=> {
-    res.json({
-        patients: [
-          {
-            id: "1",
-            name: "Dwight Schrute",
-            domain: "patient",
-            email: "Dwight@office.com",
-            age: 20,
-            gender: "male",
-            date_of_birth: "2020/03/20",
-            date_of_last_visit: "2020/03/20",
-            symptoms: [{ value: "Cough" }, { value: "Headache" }],
-            medicines: [{ meds: "Diphenhydramine" }]
-          },
-          {
-            id: "2",
-            name: "James Halpert",
-            domain: "patient",
-            email: "James@office.com",
-            age: 20,
-            gender: "male",
-            date_of_birth: "2020/03/20",
-            date_of_last_visit: "2020/03/20",
-            symptoms: [{ value: "Fever" }, { value: "Cold" }],
-            medicines: [{ meds: "Crocin" }, { meds: "Vicks" }]
-          }
-        ]
-      })
-})
+app.get("/api/patients", (req, res) => {
+  mongoose.connect(MONGO_URI, (err, client) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+      return;
+    }
+
+    const db = client.db("clientPortal");
+    const collection = db.collection("patients");
+    collection.find({}).toArray((err, docs) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+        return;
+      }
+      res.json({ patients: docs });
+    });
+  });
+});
+
 
 // A mock database of users
 const users = [
