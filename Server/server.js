@@ -11,7 +11,7 @@ const logger = require("morgan");
 const path = require('path');
 const connectDB = require("./config/database");
 
-PORT = 5000
+// PORT = 5000
 
 // test
 
@@ -156,8 +156,8 @@ app.post('/login', (req, res) => {
 // app.use('/auth', googleRoutes)
 
 //Server Running
-app.listen(process.env.PORT, () => {
-  console.log("Server is running, you better catch it!", PORT);
+app.listen(process.env.Port, () => {
+  console.log("Server is running, you better catch it!", Port);
 });
 
 
