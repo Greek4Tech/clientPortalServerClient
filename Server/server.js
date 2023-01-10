@@ -11,7 +11,7 @@ const logger = require("morgan");
 const path = require('path');
 const connectDB = require("./config/database");
 
-// PORT = 5000
+PORT = 5000
 
 // test
 
