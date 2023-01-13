@@ -32,7 +32,7 @@ const MyProfile = props => {
         </p>
         <p>
           <strong>Medicines : </strong>
-          {patients.medicines.map(a => a.meds).toString()}
+          {patients.medicines.map(a => a.medicines).toString()}
         </p>
       </Card>
     </div>

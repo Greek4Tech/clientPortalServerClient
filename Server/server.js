@@ -106,9 +106,9 @@ app.post('/api/addpatient', (req, res) => {
     age: req.body.age,
     gender: req.body.gender,
     symptoms: req.body.symptoms,
-    medicines: req.body.meds,
-    dateOfBirth: req.body.date_of_birth,
-    lastVisited: req.body.date_of_last_visit 
+    medicines: req.body.medicines,
+    date_of_birth: req.body.date_of_birth,
+    date_of_last_visit: req.body.date_of_last_visit 
   });
   console.log(newPatient)
 

@@ -138,7 +138,7 @@ class PatientList extends React.Component {
           </p>
           <p>
             <strong>Medicines : </strong>
-            {medicines.map(a => a.meds).toString()}
+            {medicines.map(a => a.medicines).toString()}
           </p>
         </Modal>
       </div>
