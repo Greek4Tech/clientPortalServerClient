@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Form, Input, Button, Select, DatePicker, Col } from "antd";
+import {updatePatient} from './patientActions'
 import moment from "moment";
+
+function mapDispatchToProps(dispatch) {
+  return {
+      updatePatient: (patientId, updatedPatient) => dispatch(updatePatient(patientId, updatedPatient))
+  }
+}
+
 
 const { Search } = Input;
 const { Option } = Select;
@@ -42,10 +50,9 @@ const Demo_form = props => {
   const onFinish = values => {
     values.date_of_birth = values.date_of_birth.format("YYYY/MM/DD");
     values.date_of_last_visit = values.date_of_last_visit.format("YYYY/MM/DD");
-    values.id = props.patients.id;
     values.symptoms = fields;
     values.medicines = meds;
-    props.edit_patient(values);
+    props.updatePatient(props.patient.id, values);
     props.history.push("/patientlist");
   };
 
@@ -223,6 +230,7 @@ const mapPropsToState = dispatch => {
     }
   };
 };
+
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
   return {
@@ -230,4 +238,5 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default connect(mapStateToProps, mapPropsToState)(Demo_form);
+export default connect(null, mapDispatchToProps)(Demo_form);
+

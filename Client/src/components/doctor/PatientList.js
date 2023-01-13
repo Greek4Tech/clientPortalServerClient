@@ -19,6 +19,7 @@ class PatientList extends React.Component {
   // `showModal` This function is passed as an event handler to the list items. When an item is clicked, it filters the list of patients stored in the component's props to find the patient whose email matches the `id` of the clicked element, and then updates the component's state with the selected patient's information displayed inside.
   
   showModal = event => {
+    console.log(event.target.id)
     const modalData = this.props.patients.filter(
       patient => patient.email == event.target.id
     );
@@ -34,8 +35,9 @@ class PatientList extends React.Component {
       medicines: modalData[0].medicines
     });
   };
+  
 
-  // This function is a lifecycle method that is called when the component is mounted (i.e. inserted into the DOM). It makes a GET request to the `api/patients` endpoint to fetch a list of patients. I then dispatches an `upset` action for each patient, which updates the Redux store with the patient data. 
+  // This function is a lifecycle method that is called when the component is mounted (i.e. inserted into the DOM). It makes a GET request to the `api/patients` endpoint to fetch a list of patients. I then dispatches an `upsert` action for each patient, which updates the Redux store with the patient data. 
   componentDidMount = () => {
     fetch("/api/patients").then(response => {
       return response.json()
@@ -62,6 +64,7 @@ class PatientList extends React.Component {
   handleDelete = event => {
     this.props.delete_patient(event.target.id);
   };
+  // In order to store the changes made to the patient's chart, you will need to make a PUT or PATCH request to the MongoDB server to update the patient's information.
   handleEdit = event => {
     this.props.history.push("/edit/" + event.target.id);
   };

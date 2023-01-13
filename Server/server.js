@@ -51,26 +51,27 @@ app.use(passport.session());
 
 // Connect to MongoDB
 app.get("/api/patients", (req, res) => {
-  mongoose.connect(MONGO_URI, (err, client) => {
+  Patient.find({}, (err, patients) => {
     if (err) {
       console.log(err);
       res.status(500).send(err);
       return;
     }
-
-    const db = client.db("clientPortal");
-    const collection = db.collection("patients");
-    collection.find({}).toArray((err, docs) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send(err);
-        return;
-      }
-      res.json({ patients: docs });
-    });
+    res.json({ patients });
   });
 });
 
+app.get('/patient/:email', async (req, res) => {
+  try {
+      const patient = await Patient.findOne({ email: req.params.email });
+      if (!patient) {
+          return res.status(404).json({ message: "Patient not found" });
+      }
+      res.json(patient);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+});
 
 // A mock database of users
 const users = [
